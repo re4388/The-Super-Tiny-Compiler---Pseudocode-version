@@ -13,7 +13,7 @@ import { OriginAstNode, Token } from '../originalCodeAndWIPCode/compilerType';
  *
  *   [{ type: 'paren', value: '(' }, ...]   =>   { type: 'Program', body: [...] }
  */
-function parser(tokens: Token[]): OriginAstNode {
+export function parser(tokens: Token[]): OriginAstNode {
   let currentIndex = 0;
   initProgramNode();
   traverseTokensArrayAndCreateNodeRecursively(); //this function is key and how to name it is particular important

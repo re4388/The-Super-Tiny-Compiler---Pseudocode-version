@@ -11,48 +11,71 @@
  * Our code generator is going to recursively call itself to print each node in
  * the tree into one giant string.
  */
+export function codeGenerator(node: CAst): string {
+  createStringByNodeTypeRecursively(node);
+}
 
-function codeGenerator(node) {
-  // We'll break things down by the `type` of the `node`.
+function createStringByNodeTypeRecursively(node) {
   switch (node.type) {
-    // If we have a `Program` node. We will map through each node in the `body`
-    // and run them through the code generator and join them with a newline.
     case 'Program':
-      return node.body.map(codeGenerator).join('\n');
+      return addNewLine(node);
 
-    // For `ExpressionStatement` we'll call the code generator on the nested
-    // expression and we'll add a semicolon...
     case 'ExpressionStatement':
-      return (
-        codeGenerator(node.expression) + ';' // << (...because we like to code the *correct* way)
-      );
+      return addSemiColon(node);
 
-    // For `CallExpression` we will print the `callee`, add an open
-    // parenthesis, we'll map through each node in the `arguments` array and run
-    // them through the code generator, joining them with a comma, and then
-    // we'll add a closing parenthesis.
     case 'CallExpression':
-      return (
-        codeGenerator(node.callee) +
-        '(' +
-        node.arguments.map(codeGenerator).join(', ') +
-        ')'
-      );
+      return addParenthesisToCalleeAndArgument(node);
 
-    // For `Identifier` we'll just return the `node`'s name.
     case 'Identifier':
-      return node.name;
+      return nodeName(node);
 
-    // For `NumberLiteral` we'll just return the `node`'s value.
     case 'NumberLiteral':
-      return node.value;
+      return nodeValue(node);
 
-    // For `StringLiteral` we'll add quotations around the `node`'s value.
     case 'StringLiteral':
-      return '"' + node.value + '"';
+      return nodeValueWithQuotations(node);
 
-    // And if we haven't recognized the node, we'll throw an error.
     default:
       throw new TypeError(node.type);
   }
+}
+
+function addNewLine(node) {
+  // If we have a `Program` node. We will map through each node in the `body`
+  // and run them through the code generator and join them with a newline.
+  return node.body.map(codeGenerator).join('\n');
+}
+
+function addSemiColon(node) {
+  // For `ExpressionStatement` we'll call the code generator on the nested
+  // expression and we'll add a semicolon...
+  return codeGenerator(node.expression) + ';';
+}
+
+function addParenthesisToCalleeAndArgument(node) {
+  // For `CallExpression` we will print the `callee`, add an open
+  // parenthesis, we'll map through each node in the `arguments` array and run
+  // them through the code generator, joining them with a comma, and then
+  // we'll add a closing parenthesis.
+  return (
+    codeGenerator(node.callee) +
+    '(' +
+    node.arguments.map(codeGenerator).join(', ') +
+    ')'
+  );
+}
+
+function nodeName(node) {
+  // For `Identifier` we'll just return the `node`'s name.
+  return node.name;
+}
+
+function nodeValue(node) {
+  // For `NumberLiteral` we'll just return the `node`'s value.
+  return node.value;
+}
+
+function nodeValueWithQuotations(node) {
+  // For `StringLiteral` we'll add quotations around the `node`'s value.
+  return '"' + node.value + '"';
 }

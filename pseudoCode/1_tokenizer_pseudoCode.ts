@@ -15,7 +15,7 @@ import { Token } from '../originalCodeAndWIPCode/compilerType';
  *
  *   (add 2 (subtract 4 2))   =>   [{ type: 'paren', value: '(' }, ...]
  */
-export function tokenizer_v2(lispInput: string): Token[] {
+export function tokenizer(lispInput: string): Token[] {
   let currentIndex: number = 0;
   let result: Token[] = [];
 
