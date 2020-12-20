@@ -1,5 +1,4 @@
-import { Visitor } from '../originalCodeAndWIPCode/compilerType';
-import { traverser } from '3_traverser_pseudoCode copy copy 3';
+import { traverser } from './3_traverser_pseudoCode';
 /**
  * Next up, the transformer. Our transformer is going to take the AST that we
  * have built and pass it to our traverser function with a visitor and will
