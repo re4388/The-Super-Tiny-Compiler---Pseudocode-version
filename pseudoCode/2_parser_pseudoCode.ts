@@ -1,13 +1,4 @@
 /**
- * ============================================================================
- *                                 ヽ/❀o ل͜ o\ﾉ
- *                                THE PARSER!!!
- * ============================================================================
- */
-
-import { OriginAstNode, Token } from '../originalCodeAndWIPCode/compilerType';
-
-/**
  * For our parser we're going to take our array of tokens and turn it into an
  * AST.
  *

@@ -1,11 +1,3 @@
-import { Visitor } from '../originalCodeAndWIPCode/compilerType';
-/**
- * ============================================================================
- *                                 ⌒(❀>◞౪◟<❀)⌒
- *                               THE TRAVERSER!!!
- * ============================================================================
- */
-
 /**
  * So now we have our AST, and we want to be able to visit different nodes with
  * a visitor. We need to be able to call the methods on the visitor whenever we

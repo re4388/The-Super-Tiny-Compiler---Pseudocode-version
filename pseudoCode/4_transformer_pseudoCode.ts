@@ -1,11 +1,5 @@
 import { Visitor } from '../originalCodeAndWIPCode/compilerType';
-/**
- * ============================================================================
- *                                   ⁽(◍˃̵͈̑ᴗ˂̵͈̑)⁽
- *                              THE TRANSFORMER!!!
- * ============================================================================
- */
-
+import { traverser } from '3_traverser_pseudoCode copy copy 3';
 /**
  * Next up, the transformer. Our transformer is going to take the AST that we
  * have built and pass it to our traverser function with a visitor and will
@@ -46,10 +40,6 @@ import { Visitor } from '../originalCodeAndWIPCode/compilerType';
  *                                    |   }
  * ----------------------------------------------------------------------------
  */
-
-import { traverser } from '3_traverser_pseudoCode copy copy 3';
-
-// So we have our transformer function which will accept the lisp ast.
 export function transformer(oldAst: OldAst, visitor: Visitor): NewAst {
   const newAst = initNewEmptyAst();
   linkNewAstRefToOldAst();
