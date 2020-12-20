@@ -4,39 +4,39 @@
  *
  *   [{ type: 'paren', value: '(' }, ...]   =>   { type: 'Program', body: [...] }
  */
-export function parser(tokens: Token[]): OriginAstNode {
-  let currentIndex = 0;
-  initProgramNode();
-  traverseTokensArrayAndCreateNodeRecursively(); //this function is key and how to name it is particular important
-  return ast;
+export function parser(tokens: Token[]): Ast {
+  let ast = initProgramNode();
+  return traverseTokensArrayAndCreateNodeRecursively(tokens, ast);
 }
 
 function initProgramNode() {
   // Now, we're going to create our AST which will have a root which is a
   // `Program` node.
-  let ast = {
+  return {
     type: 'Program',
     body: [],
   };
 }
 
-function traverseTokensArrayAndCreateNodeRecursively() {
+function traverseTokensArrayAndCreateNodeRecursively(tokens, ast) {
+  let currentIndex = 0;
   while (currentIndex < tokens.length) {
-    ast.body.push(createNodesRecursively());
+    ast.body.push(createNodesRecursively(tokens));
   }
+  return ast;
 }
 
 /* This time we're going to use recursion instead of a `while` loop. So we define a `walk` function. */
-function createNodesRecursively() {
+function createNodesRecursively(tokens) {
   // Inside the walk function we start by grabbing the `current` token.
   let token = tokens[currentIndex];
-  createNumberLiteralNode();
-  createStringLiteralNode();
-  createCallExpressionsNodeAndCheckResursive();
+  createNumberLiteralNode(token);
+  createStringLiteralNode(token);
+  createCallExpressionsNodeAndCheckResursive(token);
   throw new TypeError(token.type);
 }
 
-function createNumberLiteralNode() {
+function createNumberLiteralNode(token) {
   // We're going to split each type of token off into a different code path,
   // starting off with `number` tokens.
 
@@ -56,7 +56,7 @@ function createNumberLiteralNode() {
   }
 }
 
-function createStringLiteralNode() {
+function createStringLiteralNode(token) {
   // If we have a string we will do the same as number and create a
   // `StringLiteral` node.
   if (token.type === 'string') {
@@ -69,13 +69,13 @@ function createStringLiteralNode() {
   }
 }
 
-function createCallExpressionsNodeAndCheckResursive() {
+function createCallExpressionsNodeAndCheckResursive(token) {
   // Next we're going to look for CallExpressions. We start this off when we
   // encounter an open parenthesis.
-  if (seeOpenParen()) {
+  if (seeOpenParen(token)) {
     // We'll increment `current` to skip the parenthesis since we don't care
     // about it in our AST.
-    incrementToken();
+    incrementToken(token);
 
     // We create a base node with the type `CallExpression`, and we're going
     // to set the name as the current token's value since the next token after
@@ -87,7 +87,7 @@ function createCallExpressionsNodeAndCheckResursive() {
     };
 
     // We increment `current` *again* to skip the name token.
-    incrementToken();
+    incrementToken(token);
 
     // And now we want to loop through each token that will be the `params` of
     // our `CallExpression` until we encounter a closing parenthesis.
@@ -123,7 +123,7 @@ function createCallExpressionsNodeAndCheckResursive() {
     // So we create a `while` loop that will continue until it encounters a
     // token with a `type` of `'paren'` and a `value` of a closing
     // parenthesis.
-    while (haveNotSeeCloseParen()) {
+    while (haveNotSeeCloseParen(token)) {
       // we'll call the `walk` function which will return a `node` and we'll
       // push it into our `node.params`.
       node.params.push(createNodesRecursively());
@@ -139,15 +139,15 @@ function createCallExpressionsNodeAndCheckResursive() {
   }
 }
 
-function haveNotSeeCloseParen() {
+function haveNotSeeCloseParen(token) {
   return (
     token.type !== 'paren' || (token.type === 'paren' && token.value !== ')')
   );
 }
 
-function seeOpenParen() {
+function seeOpenParen(token) {
   return token.type === 'paren' && token.value === '(';
 }
-function incrementToken() {
+function incrementToken(token) {
   token = tokens[++currentIndex];
 }

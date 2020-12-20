@@ -2,22 +2,26 @@
  *   (add 2 (subtract 4 2))   =>   [{ type: 'paren', value: '(' }, ...]
  */
 export function tokenizer(lispInput: string): Token[] {
+  return traverseStrAndCreateTokens(lispInput);
+}
+
+function traverseStrAndCreateTokens(lispInput: string): Token[] {
   let currentIndex: number = 0;
   let result: Token[] = [];
 
   while (currentIndex < lispInput.length) {
     let char: string = lispInput[currentIndex];
-    checkForParenthesis();
-    checkForWhitespace();
-    checkForNumber();
-    checkForDoubleQuotes();
-    checkForFnName();
+    createParenthesisToken();
+    SkipForWhitespace();
+    createNumberToken();
+    createDoubleQuoteToken();
+    createFnNameToken();
     throw new TypeError('I do not know what this character is: ' + char);
   }
   return result;
 }
 
-function checkForParenthesis() {
+function createParenthesisToken() {
   // We check to see if we have an open parenthesis:
   if (char === '(') {
     // If we do, we push a new token with the type `paren` and set the value
@@ -43,7 +47,7 @@ function checkForParenthesis() {
   }
 }
 
-function checkForWhitespace() {
+function SkipForWhitespace() {
   // Moving on, we're now going to check for whitespace. This is interesting
   // because we care that whitespace exists to separate characters, but it
   // isn't actually important for us to store as a token. We would only throw
@@ -58,7 +62,7 @@ function checkForWhitespace() {
   }
 }
 
-function checkForNumber() {
+function createNumberToken() {
   // The next type of token is a number. This is different than what we have
   // seen before because a number could be any number of characters and we
   // want to capture the entire sequence of characters as one token.
@@ -89,7 +93,7 @@ function checkForNumber() {
   }
 }
 
-function checkForDoubleQuotes() {
+function createDoubleQuoteToken() {
   // We'll also add support for strings in our language which will be any
   // text surrounded by double quotes (").
   //
@@ -117,7 +121,7 @@ function checkForDoubleQuotes() {
   }
 }
 
-function checkForFnName() {
+function createFnNameToken() {
   // The last type of token will be a `name` token. This is a sequence of
   // letters instead of numbers, that are the names of functions in our lisp
   // syntax.

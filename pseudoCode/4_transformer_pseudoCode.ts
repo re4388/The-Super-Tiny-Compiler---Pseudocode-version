@@ -41,7 +41,7 @@ import { traverser } from './3_traverser_pseudoCode';
  */
 export function transformer(oldAst: OldAst, visitor: Visitor): NewAst {
   const newAst = initNewEmptyAst();
-  linkNewAstRefToOldAst();
+  linkNewAstRefToOldAst(newAst);
   return traverser(oldAst, visitor);
 }
 
@@ -52,7 +52,7 @@ function initNewEmptyAst() {
   };
 }
 
-function linkNewAstRefToOldAst() {
+function linkNewAstRefToOldAst(newAst) {
   // cheat a little and create a bit of a hack. We're going to
   // use a property named `context` on our parent nodes that we're going to push
   // nodes to their parent's `context`. Normally you would have a better
